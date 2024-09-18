@@ -8,15 +8,15 @@ client = Groq(
     api_key=os.getenv('API_KEY'),
 )
 
-# Velikost herní plochy
+# Size of the game board
 width, height = 6, 6
 
-# Inicializace hada a jídla
+# Initialize the snake and food
 snake = [(5, 5)]
 direction = (0, 1) 
 food = (random.randint(0, width - 1), random.randint(0, height - 1))
 
-# FZobrazení herní plochy
+# Display the game board
 def print_board():
     board = [[' ' for _ in range(width)] for _ in range(height)]
     for segment in snake:
@@ -26,13 +26,13 @@ def print_board():
         print(''.join(row))
     print('\n' + '-' * width)
 
-# Kontrola kolizí
+# Check for collisions
 def check_collision(head):
     if head in snake:
         return True  # Narazil do sebe
     return False
 
-# Funkce pro teleportaci
+# Function for teleportation
 def teleport(head):
     x, y = head
     if x < 0:
@@ -45,14 +45,14 @@ def teleport(head):
         y = 0
     return (x, y)
 
-# Generování nového jídla na prázdné pozici
+# Generate new food at an empty position
 def generate_food():
     while True:
         new_food = (random.randint(0, width - 1), random.randint(0, height - 1))
         if new_food not in snake:  
             return new_food
 
-# Získání směru od LLM
+# Get direction from LLM
 def get_llm_direction():
     game_state = {
         "snake": snake,
@@ -97,7 +97,7 @@ Return only the tuple (dx, dy) without any additional explanation, text, or form
     new_direction = eval(response.choices[0].message.content.strip())
     return new_direction
 
-# Hlavní herní smyčka
+# Main game loop
 while True:
     print_board()
 
